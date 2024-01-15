@@ -1,0 +1,81 @@
+:root {
+    --circle-size: 10px;
+    --circle-color: #8d8d8d;
+    --typing-bg-color: #f2f2f2;
+    --animation-duration: 1000ms;
+    --animation-delay: 3600ms;
+}
+
+.typing {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 40px;
+    border-radius: 20px;
+    margin: 0 1rem;
+    background-color: var(--typing-bg-color);
+}
+
+.circle {
+    display: block;
+    height: var(--circle-size);
+    width: var(--circle-size);
+    border-radius: 50%;
+    background-color: var(--circle-color);
+    margin: 3px;
+}
+
+.circle.scaling,
+.circle.bouncing {
+    animation-duration: var(--animation-duration);
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-delay: var(--animation-delay);
+}
+
+.circle.scaling {
+    animation-name: typing;
+}
+
+.circle.bouncing {
+    animation-name: bounce;
+}
+
+.circle:nth-child(1) {
+    animation-delay: 0ms;
+}
+
+.circle:nth-child(2) {
+    animation-delay: 333ms;
+}
+
+.circle:nth-child(3) {
+    animation-delay: 666ms;
+}
+
+@keyframes typing {
+
+    0%,
+    33%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.4);
+    }
+}
+
+@keyframes bounce {
+
+    0%,
+    33%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
