@@ -18,10 +18,30 @@ export const ProsConsStreamPage = () => {
     setMessages((prev) => [...prev, { text, isGpt: false }]);
 
     //TODO: useCase
-    await prosConsDiscusserStreamUseCase(text);
+    const reader = await prosConsDiscusserStreamUseCase(text);
+
     setIsLoading(false);
 
-    //TODO: isGpt =true
+    if (!reader) return alert('No se pudo generar el reader');
+
+    // Generate the last message
+
+    const decoder = new TextDecoder();
+    let message = '';
+    setMessages((messages) => [...messages, { text: message, isGpt: true }]);
+
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const decodedChunk = decoder.decode(value, { stream: true });
+      message += decodedChunk;
+      setMessages((messages) => {
+        const newMessages = [...messages];
+        newMessages[messages.length - 1].text = message;
+        return newMessages;
+      });
+    }
 
   };
 

@@ -21,6 +21,9 @@ export const prosConsDiscusserStreamUseCase = async (prompt: string) => {
       return null;
     }
 
+    return reader;
+
+    /* 
     const decoder = new TextDecoder();
 
     let text = "";
@@ -34,7 +37,8 @@ export const prosConsDiscusserStreamUseCase = async (prompt: string) => {
       const decodedChunk = decoder.decode(value, { stream: true });
       text += decodedChunk;
       console.log(text);
-    }
+    } 
+    */
   } catch (error) {
     console.log(error);
     return null;
