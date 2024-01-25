@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { GptMessage, MyMessage, TypingLoader, TextMessageBox } from '../../components';
-import { prosConsDiscusserStreamUseCase } from '../../../core/use-cases';
+import { prosConsDiscusserStreamGeneratorUseCase } from '../../../core/use-cases';
 
 interface Message {
   text: string;
@@ -18,27 +18,15 @@ export const ProsConsStreamPage = () => {
     setMessages((prev) => [...prev, { text, isGpt: false }]);
 
     //TODO: useCase
-    const reader = await prosConsDiscusserStreamUseCase(text);
-
+    const stream = await prosConsDiscusserStreamGeneratorUseCase(text);
     setIsLoading(false);
 
-    if (!reader) return alert('No se pudo generar el reader');
+    setMessages((messages) => [...messages, { text: '', isGpt: true }]);
 
-    // Generate the last message
-
-    const decoder = new TextDecoder();
-    let message = '';
-    setMessages((messages) => [...messages, { text: message, isGpt: true }]);
-
-    // eslint-disable-next-line no-constant-condition
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      const decodedChunk = decoder.decode(value, { stream: true });
-      message += decodedChunk;
+    for await (const text of stream) {
       setMessages((messages) => {
         const newMessages = [...messages];
-        newMessages[messages.length - 1].text = message;
+        newMessages[newMessages.length - 1].text = text;
         return newMessages;
       });
     }
